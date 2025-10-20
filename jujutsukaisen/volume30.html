@@ -12,6 +12,7 @@
   .arrow:hover { color: rgba(255,255,255,0.9); }
   #leftArrow { left:10px; }
   #rightArrow { right:10px; }
+  #pagePicker { position:fixed; bottom:10px; left:10px; z-index:1000; background:rgba(0,0,0,0.5); color:white; border:none; padding:5px 10px; font-size:16px; border-radius:5px; width:60px; }
 </style>
 </head>
 <body>
@@ -20,12 +21,14 @@
 <div id="leftArrow" class="arrow">&#10094;</div>
 <div id="rightArrow" class="arrow">&#10095;</div>
 <img id="page" src="" alt="">
+<input type="number" id="pagePicker" min="1" value="1">
 
 <script>
 const epubUrl = "https://biology-study.github.io/jujutsukaisen/jjk30.epub";
 let pages = [];
 let current = 0;
 let images = [];
+const pagePicker = document.getElementById("pagePicker");
 
 async function loadEPUB() {
     const resp = await fetch(epubUrl);
@@ -45,18 +48,30 @@ async function loadEPUB() {
         images.push(img);
     }
     pages = images;
+    pagePicker.max = pages.length;
     document.getElementById("loading").style.display = "none";
     document.getElementById("page").style.display = "block";
     showPage();
 }
 
-function showPage(){ if(pages.length===0) return; document.getElementById("page").src = pages[current].src; }
+function showPage(){ 
+    if(pages.length===0) return; 
+    document.getElementById("page").src = pages[current].src; 
+    pagePicker.value = current + 1;
+}
+
 function nextPage(){ if(current<pages.length-1){ current++; showPage(); } }
 function prevPage(){ if(current>0){ current--; showPage(); } }
 
 document.getElementById("leftArrow").addEventListener("click", prevPage);
 document.getElementById("rightArrow").addEventListener("click", nextPage);
 document.addEventListener("keydown",(e)=>{ if(e.key==="ArrowLeft") prevPage(); if(e.key==="ArrowRight") nextPage(); });
+
+// Page picker input
+pagePicker.addEventListener("change", ()=>{ 
+    let val = parseInt(pagePicker.value);
+    if(val>=1 && val<=pages.length){ current = val-1; showPage(); }
+});
 
 loadEPUB();
 </script>
