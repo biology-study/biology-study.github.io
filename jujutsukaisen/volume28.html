@@ -6,7 +6,8 @@
 <script src="https://stuk.github.io/jszip/dist/jszip.min.js"></script>
 <style>
   html, body { margin:0; height:100%; background:#111; display:flex; justify-content:center; align-items:center; overflow:hidden; }
-  #page { max-width:100%; max-height:100%; display:block; margin:0 auto; user-select:none; }
+  #page { max-width:100%; max-height:100%; display:none; margin:0 auto; user-select:none; }
+  #loading { position:absolute; color:white; font-size:36px; font-family:Arial, sans-serif; text-align:center; }
   .arrow { position:fixed; top:50%; transform:translateY(-50%); font-size:60px; color:rgba(255,255,255,0.5); cursor:pointer; z-index:1000; user-select:none; transition: color 0.2s; }
   .arrow:hover { color: rgba(255,255,255,0.9); }
   #leftArrow { left:10px; }
@@ -15,46 +16,47 @@
 </head>
 <body>
 
+<div id="loading">Loading manga...</div>
 <div id="leftArrow" class="arrow">&#10094;</div>
 <div id="rightArrow" class="arrow">&#10095;</div>
-<img id="page" src="" alt="Loading manga page...">
+<img id="page" src="" alt="">
 
 <script>
 const epubUrl = "https://biology-study.github.io/jujutsukaisen/jjk28.epub";
 let pages = [];
 let current = 0;
+let images = [];
 
 async function loadEPUB() {
     const resp = await fetch(epubUrl);
     const blob = await resp.blob();
     const zip = await JSZip.loadAsync(blob);
-    pages = [];
+    const imgFiles = [];
     zip.forEach((relativePath, file) => {
-        if (relativePath.match(/\.(jpg|jpeg|png|gif)$/i)) {
-            pages.push(relativePath);
-        }
+        if (relativePath.match(/\.(jpg|jpeg|png|gif)$/i)) { imgFiles.push(relativePath); }
     });
-    pages.sort();
+    imgFiles.sort();
+
+    for (let i=0;i<imgFiles.length;i++){ 
+        const fileData = await zip.file(imgFiles[i]).async("blob");
+        const url = URL.createObjectURL(fileData);
+        const img = new Image();
+        img.src = url;
+        images.push(img);
+    }
+    pages = images;
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("page").style.display = "block";
     showPage();
 }
 
-async function showPage() {
-    if (pages.length === 0) return;
-    const imgFile = pages[current];
-    const resp = await fetch(epubUrl);
-    const blob = await resp.blob();
-    const zip = await JSZip.loadAsync(blob);
-    const fileData = await zip.file(imgFile).async("blob");
-    const url = URL.createObjectURL(fileData);
-    document.getElementById("page").src = url;
-}
-
-function nextPage() { if(current < pages.length - 1) { current++; showPage(); } }
-function prevPage() { if(current > 0) { current--; showPage(); } }
+function showPage(){ if(pages.length===0) return; document.getElementById("page").src = pages[current].src; }
+function nextPage(){ if(current<pages.length-1){ current++; showPage(); } }
+function prevPage(){ if(current>0){ current--; showPage(); } }
 
 document.getElementById("leftArrow").addEventListener("click", prevPage);
 document.getElementById("rightArrow").addEventListener("click", nextPage);
-document.addEventListener("keydown", (e) => { if(e.key==="ArrowLeft") prevPage(); if(e.key==="ArrowRight") nextPage(); });
+document.addEventListener("keydown",(e)=>{ if(e.key==="ArrowLeft") prevPage(); if(e.key==="ArrowRight") nextPage(); });
 
 loadEPUB();
 </script>
