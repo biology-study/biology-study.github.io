@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EPUB.js Reader</title>
+    <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        #viewer {
+            flex: 1;
+            border: 1px solid #ccc;
+            overflow: hidden;
+        }
+        #controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            gap: 10px;
+            background: #f0f0f0;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 5px 10px;
+        }
+        select {
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="viewer"></div>
+    <div id="controls">
+        <button id="prev">Previous</button>
+        <button id="next">Next</button>
+        <label for="fontSize">Font Size:</label>
+        <select id="fontSize">
+            <option value="100%">Default</option>
+            <option value="120%">Large</option>
+            <option value="150%">Extra Large</option>
+        </select>
+        <label for="chapterSelect">Chapters:</label>
+        <select id="chapterSelect"></select>
+    </div>
+
+    <script>
+        // Initialize book
+        const book = ePub("Jujutsu Kaisen v28 (TCB).epub"); // Updated to your EPUB file
+        const rendition = book.renderTo("viewer", {
+            width: "100%",
+            height: "100%"
+        });
+
+        rendition.display();
+
+        // Next / Previous buttons
+        document.getElementById("next").addEventListener("click", () => rendition.next());
+        document.getElementById("prev").addEventListener("click", () => rendition.prev());
+
+        // Font size selector
+        document.getElementById("fontSize").addEventListener("change", (e) => {
+            rendition.themes.default({
+                "body": {
+                    "font-size": e.target.value
+                }
+            });
+        });
+
+        // Load Table of Contents
+        book.loaded.navigation.then(navigation => {
+            const chapterSelect = document.getElementById("chapterSelect");
+            navigation.toc.forEach((chapter, index) => {
+                const option = document.createElement("option");
+                option.value = chapter.href;
+                option.textContent = chapter.label;
+                chapterSelect.appendChild(option);
+            });
+
+            chapterSelect.addEventListener("change", (e) => {
+                rendition.display(e.target.value);
+            });
+        });
+    </script>
+</body>
+</html>
