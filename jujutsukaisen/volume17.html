@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Jujutsu Kaisen Volume 17</title>
+<script src="https://stuk.github.io/jszip/dist/jszip.min.js"></script>
+<style>
+  html, body { margin:0; height:100%; background:#111; display:flex; justify-content:center; align-items:center; overflow:hidden; }
+  #page { max-width:100%; max-height:100%; display:none; margin:0 auto; user-select:none; }
+  #loading { position:absolute; color:white; font-size:36px; font-family:Arial, sans-serif; text-align:center; }
+  .arrow { position:fixed; top:50%; transform:translateY(-50%); font-size:60px; color:rgba(255,255,255,0.5); cursor:pointer; z-index:1000; user-select:none; transition: color 0.2s; }
+  .arrow:hover { color: rgba(255,255,255,0.9); }
+  #leftArrow { left:10px; }
+  #rightArrow { right:10px; }
+  #pagePicker { position:fixed; bottom:10px; left:10px; z-index:1000; background:rgba(0,0,0,0.5); color:white; border:none; padding:5px 10px; font-size:16px; border-radius:5px; width:60px; }
+</style>
+</head>
+<body>
+
+<div id="loading">Loading manga...</div>
+<div id="leftArrow" class="arrow">&#10094;</div>
+<div id="rightArrow" class="arrow">&#10095;</div>
+<img id="page" src="" alt="">
+<input type="number" id="pagePicker" min="1" value="1">
+
+<script>
+const epubUrl = "https://biology-study.github.io/jujutsukaisen/jjk17.epub";
+let pages = [];
+let current = 0;
+let images = [];
+const pagePicker = document.getElementById("pagePicker");
+
+async function loadEPUB() {
+    const resp = await fetch(epubUrl);
+    const blob = await resp.blob();
+    const zip = await JSZip.loadAsync(blob);
+    const imgFiles = [];
+    zip.forEach((relativePath, file) => {
+        if (relativePath.match(/\.(jpg|jpeg|png|gif)$/i)) { imgFiles.push(relativePath); }
+    });
+    imgFiles.sort();
+
+    for (let i=0;i<imgFiles.length;i++){ 
+        const fileData = await zip.file(imgFiles[i]).async("blob");
+        const url = URL.createObjectURL(fileData);
+        const img = new Image();
+        img.src = url;
+        images.push(img);
+    }
+    pages = images;
+    pagePicker.max = pages.length;
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("page").style.display = "block";
+    showPage();
+}
+
+function showPage(){ 
+    if(pages.length===0) return; 
+    document.getElementById("page").src = pages[current].src; 
+    pagePicker.value = current + 1;
+}
+
+function nextPage(){ if(current<pages.length-1){ current++; showPage(); } }
+function prevPage(){ if(current>0){ current--; showPage(); } }
+
+document.getElementById("leftArrow").addEventListener("click", prevPage);
+document.getElementById("rightArrow").addEventListener("click", nextPage);
+document.addEventListener("keydown",(e)=>{ if(e.key==="ArrowLeft") prevPage(); if(e.key==="ArrowRight") nextPage(); });
+
+// Page picker input
+pagePicker.addEventListener("change", ()=>{ 
+    let val = parseInt(pagePicker.value);
+    if(val>=1 && val<=pages.length){ current = val-1; showPage(); }
+});
+
+loadEPUB();
+</script>
+</body>
+</html>
