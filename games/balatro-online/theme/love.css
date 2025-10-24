@@ -8,7 +8,7 @@ h1 {
 }
 
 body {
-/*    background-image: url(bg.png);*/
+    background-image: url(bg.png);
     background-repeat: no-repeat;
     font-family: arial;
     margin: 0;
@@ -16,8 +16,6 @@ body {
     background-color: rgb( 154, 205, 237 );
     color: rgb( 28, 78, 104 );
 }
-
-
 body::before {
     content: "Click To Start!"; /* 添加背景文字 */
     position: absolute;       /* 绝对定位 */
@@ -29,7 +27,6 @@ body::before {
     font-weight: bold;        /* 设置字体粗细 */
     z-index: -1;              /* 确保背景文字位于内容下方 */
 }
-
 footer {
     font-family: arial;
     font-size: 12px;
