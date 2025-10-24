@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Jujutsu Kaisen Volume 14</title>
+<title>Chainsaw Man Reader</title>
 <script src="https://stuk.github.io/jszip/dist/jszip.min.js"></script>
 <style>
   :root { --bg:#0b0b0b; --muted:rgba(255,255,255,0.55); --accent:rgba(255,255,255,0.95); }
@@ -19,7 +19,19 @@
   .controls { position:fixed; left:12px; bottom:12px; z-index:50; display:flex; gap:8px; align-items:center; }
   .controls input[type=number] { width:80px; padding:6px 8px; border-radius:6px; border:0; background:rgba(255,255,255,0.06); color:white; }
   .toggle-btn { position:fixed; right:12px; bottom:12px; z-index:50; padding:8px 12px; border-radius:6px; border:0; background:rgba(255,255,255,0.06); color:white; cursor:pointer; }
-  .meta { position:fixed; right:12px; top:12px; color:var(--muted); font-size:14px; z-index:50; }
+  .meta { position:fixed; right:12px; top:12px; color:var(--muted); font-size:14px; z-index:50; display:flex; align-items:center; gap:4px; }
+  #volumeSelect {
+    background: rgba(255,255,255,0.06);
+    color: black;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
 </style>
 </head>
 <body>
@@ -39,19 +51,51 @@
     </div>
 
     <button id="toggleView" class="toggle-btn">Two-page: Off</button>
-    <div class="meta">Volume 14</div>
+    <div class="meta">
+      Volume
+      <select id="volumeSelect"></select>
+    </div>
   </div>
 
 <script>
-const epubUrl = "https://biology-study.github.io/jujutsukaisen/jjk14.epub";
+const volumeBaseUrl = "https://biology-study.github.io/manga/csm/";
+const volumes = Array.from({length: 19}, (_, i) => `csm${i+1}.epub`); // Volumes 1-19
+const volumeSelect = document.getElementById('volumeSelect');
+
+let epubUrl = volumeBaseUrl + volumes[0];
 let imgFiles = [], images = [];
 let current = 0, twoPage = false;
+
 const loadingEl = document.getElementById('loading');
 const pageA = document.getElementById('pageA');
 const pageB = document.getElementById('pageB');
 const pagePicker = document.getElementById('pagePicker');
 const totalEl = document.getElementById('total');
 const toggleBtn = document.getElementById('toggleView');
+
+// Populate volume dropdown
+volumes.forEach((v, idx) => {
+  const opt = document.createElement("option");
+  opt.value = v;
+  opt.textContent = idx+1;
+  volumeSelect.appendChild(opt);
+});
+
+volumeSelect.onchange = () => {
+  epubUrl = volumeBaseUrl + volumeSelect.value;
+  resetReader();
+};
+
+function resetReader() {
+  imgFiles = [];
+  images = [];
+  current = 0;
+  loadingEl.style.display = 'flex';
+  pageA.style.display = 'none';
+  pageB.style.display = 'none';
+  totalEl.textContent = '';
+  loadEPUB();
+}
 
 async function loadEPUB() {
   try {
@@ -82,10 +126,10 @@ function render() {
   if (twoPage) {
     const rightIdx = current;
     const leftIdx = current + 1;
-    pageB.style.display = 'block'; // right page
+    pageB.style.display = 'block';
     pageB.src = images[rightIdx].src;
     if (leftIdx < images.length) {
-      pageA.style.display = 'block'; // left page
+      pageA.style.display = 'block';
       pageA.src = images[leftIdx].src;
     } else {
       pageA.style.display = 'none';
@@ -98,33 +142,13 @@ function render() {
   pagePicker.value = Math.min(current + 1, images.length);
 }
 
-function nextPage() {
-  current += twoPage ? 2 : 1;
-  if (current >= images.length) current = images.length - 1;
-  render();
-}
-
-function prevPage() {
-  current -= twoPage ? 2 : 1;
-  if (current < 0) current = 0;
-  render();
-}
-
+function nextPage() { current += twoPage ? 2 : 1; if (current >= images.length) current = images.length - 1; render(); }
+function prevPage() { current -= twoPage ? 2 : 1; if (current < 0) current = 0; render(); }
 document.getElementById('rightArrow').onclick = nextPage;
 document.getElementById('leftArrow').onclick = prevPage;
-document.addEventListener('keydown', e => {
-  if(e.key==='ArrowRight') nextPage();
-  if(e.key==='ArrowLeft') prevPage();
-});
-pagePicker.onchange = () => {
-  current = Math.max(0, Math.min(images.length - 1, pagePicker.value - 1));
-  render();
-};
-toggleBtn.onclick = () => {
-  twoPage = !twoPage;
-  toggleBtn.textContent = 'Two-page: ' + (twoPage ? 'On' : 'Off');
-  render();
-};
+document.addEventListener('keydown', e => { if(e.key==='ArrowRight') nextPage(); if(e.key==='ArrowLeft') prevPage(); });
+pagePicker.onchange = () => { current = Math.max(0, Math.min(images.length - 1, pagePicker.value - 1)); render(); };
+toggleBtn.onclick = () => { twoPage = !twoPage; toggleBtn.textContent = 'Two-page: ' + (twoPage ? 'On' : 'Off'); render(); };
 
 loadEPUB();
 </script>
