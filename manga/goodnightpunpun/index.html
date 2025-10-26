@@ -69,8 +69,8 @@
   </div>
 
 <script>
-const volumeBaseUrl = "https://biology-study.github.io/manga/goodnightpunpun/";
-const volumes = Array.from({length: 7}, (_, i) => `punpun${i+1}.epub`); // 1-7
+const volumeBaseUrl = "https://raw.githubusercontent.com/biology-study/biology-files/main/goodnightpunpun/";
+const volumes = Array.from({length: 7}, (_, i) => `punpun${i+1}.epub`); // 1–7
 const volumeSelect = document.getElementById('volumeSelect');
 
 let epubUrl = volumeBaseUrl + volumes[0];
@@ -88,7 +88,7 @@ const toggleBtn = document.getElementById('toggleView');
 volumes.forEach((v, idx) => {
   const opt = document.createElement("option");
   opt.value = v;
-  opt.textContent = idx+1;
+  opt.textContent = idx + 1;
   volumeSelect.appendChild(opt);
 });
 
