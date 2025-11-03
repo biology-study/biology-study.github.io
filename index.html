@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Biology Notes</title>
+  <title>jcks0n’s website!!!</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Karla:wght@400;700&display=swap');
+
     body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #fafafa;
-      color: #222;
+      font-family: 'Karla', sans-serif;
+      background: radial-gradient(circle at center, #0a0015, #000000 90%);
+      color: #cfcfff;
       margin: 0;
       padding: 2rem;
       line-height: 1.6;
@@ -16,8 +18,23 @@
 
     h1 {
       text-align: center;
-      font-size: 2.5rem;
-      color: #2c7a7b;
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 3rem;
+      color: #a366ff;
+      text-shadow: 0 0 12px #a366ff, 0 0 25px #5500aa;
+      margin-bottom: 0.5rem;
+    }
+
+    .skullkid-img {
+      display: block;
+      margin: 0 auto 1rem auto;
+      width: 180px;
+      filter: drop-shadow(0 0 20px #55ff99) drop-shadow(0 0 10px #5500aa);
+      transition: transform 0.3s ease;
+    }
+
+    .skullkid-img:hover {
+      transform: scale(1.05) rotate(-3deg);
     }
 
     nav {
@@ -28,48 +45,62 @@
     nav a {
       display: inline-block;
       margin: 0.5rem 1rem;
-      padding: 0.6rem 1rem;
+      padding: 0.6rem 1.2rem;
       border-radius: 8px;
       text-decoration: none;
-      background-color: #319795;
-      color: white;
-      transition: background 0.2s ease;
+      background: linear-gradient(135deg, #220033, #6600cc);
+      color: #eee;
+      box-shadow: 0 0 10px rgba(102, 0, 204, 0.7);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     nav a:hover {
-      background-color: #2c7a7b;
+      transform: scale(1.1);
+      box-shadow: 0 0 15px #9900ff, 0 0 30px #440099;
     }
 
     section {
       max-width: 700px;
       margin: 3rem auto;
       padding: 1.5rem;
-      background: white;
+      background: rgba(10, 0, 30, 0.85);
       border-radius: 12px;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 25px rgba(85, 0, 170, 0.5);
+      backdrop-filter: blur(4px);
     }
 
     section h2 {
       margin-top: 0;
-      color: #2c7a7b;
-      border-bottom: 2px solid #e2e8f0;
+      color: #b499ff;
+      border-bottom: 2px solid #330044;
       padding-bottom: 0.5rem;
     }
 
     .update {
       margin-bottom: 1rem;
       padding: 0.5rem 0;
-      border-bottom: 1px solid #eaeaea;
+      border-bottom: 1px solid #330044;
+    }
+
+    .update strong {
+      color: #ddd;
     }
 
     .update small {
       display: block;
-      color: #666;
+      color: #aaa;
     }
   </style>
 </head>
 <body>
-  <h1>jcks0n website!!! :3</h1>
+  <!-- Skull Kid image -->
+  <img
+    src="skullkid.png"
+    alt="Skull Kid"
+    class="skullkid-img"
+  />
+
+  <h1>jcks0n’s website!!!</h1>
 
   <nav>
     <a href="manga/index.html">Manga</a>
@@ -79,14 +110,29 @@
   <section id="updates">
     <h2>website updates</h2>
 
-    <!-- Example updates — you can replace or add more below -->
     <div class="update">
-      <strong>finally fixed balatro and the 3 mangas (stupid git lfs)</strong>
-      <small>October 24, 2025</small>
-      <p>balatro is back! goodnight punpun, dandadan, and nichijou all are readable now. more manga coming soon!<p>
+      <strong>uuuhhhh balatro broken again sorry</strong>
+      <small>November 3rd, 2025</small>
+      <p>balatro fix soon. deleted nichijou, demon slayer, and soon goodnight punpun. they all suck no one wanted to read them anyway, dandadan coming back soon and aot, vinland saga, and vagabond will be added soon aswell. more games coming soon too. join my discord: <a href="https://discord.gg/9xEvZdjV" target="_blank" rel="noopener">https://discord.gg/9xEvZdjV</a></p>
     </div>
 
     <!-- Add new updates here -->
   </section>
+
+  <!-- Audio for Skull Kid laugh -->
+  <audio id="skullLaugh" preload="auto">
+    <source src="skullkid_laugh.mp3" type="audio/mpeg">
+    Your browser doesn’t support the audio element.
+  </audio>
+
+  <script>
+    const laugh = document.getElementById('skullLaugh');
+
+    // Play laugh **once** on first click anywhere
+    document.body.addEventListener('click', () => {
+      laugh.volume = 0.7;
+      laugh.play().catch(e => console.error('Error playing laugh:', e));
+    }, { once: true });
+  </script>
 </body>
 </html>
