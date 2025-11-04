@@ -69,15 +69,18 @@
   </div>
 
 <script>
-const volumeBaseUrl = "https://raw.githubusercontent.com/biology-study/biology-files/main/mha/";
-const volumeNumbers = [0, ...Array.from({length: 15}, (_, i) => i + 16)];
-const volumes = volumeNumbers.map(num => `jjk${num}.epub`);
+const oldVolumeBaseUrl = "https://raw.githubusercontent.com/biology-study/biology-files/main/mha/";
+const newVolumeBaseUrl = "https://raw.githubusercontent.com/biology-study/math-flashcards/main/mha/";
+
+// Volumes: 1–42
+const volumeNumbers = Array.from({length: 42}, (_, i) => i + 1);
+const volumes = volumeNumbers.map(num => `mha${num}.epub`);
 const volumeSelect = document.getElementById('volumeSelect');
 
-let epubUrl = volumeBaseUrl + volumes[0];
+let epubUrl = getVolumeUrl(volumes[0]);
 let imgFiles = [], images = [];
 let current = 0, twoPage = false;
-let currentLoadId = 0; // ← unique ID for each load
+let currentLoadId = 0;
 
 const loadingEl = document.getElementById('loading');
 const pageA = document.getElementById('pageA');
@@ -86,16 +89,22 @@ const pagePicker = document.getElementById('pagePicker');
 const totalEl = document.getElementById('total');
 const toggleBtn = document.getElementById('toggleView');
 
+function getVolumeUrl(volumeFile) {
+  const volNum = parseInt(volumeFile.match(/\d+/)[0], 10);
+  if (volNum >= 1 && volNum <= 10) return oldVolumeBaseUrl + volumeFile;
+  return newVolumeBaseUrl + volumeFile;
+}
+
 // Populate volume dropdown
 volumeNumbers.forEach((num, i) => {
   const opt = document.createElement("option");
   opt.value = volumes[i];
-  opt.textContent = num === 0 ? "0 (Prequel)" : num;
+  opt.textContent = num;
   volumeSelect.appendChild(opt);
 });
 
 volumeSelect.onchange = () => {
-  epubUrl = volumeBaseUrl + volumeSelect.value;
+  epubUrl = getVolumeUrl(volumeSelect.value);
   resetReader();
 };
 
@@ -111,10 +120,10 @@ function resetReader() {
 }
 
 async function loadEPUB() {
-  const loadId = ++currentLoadId; // tag this specific load
+  const loadId = ++currentLoadId;
   try {
     const resp = await fetch(epubUrl);
-    if (loadId !== currentLoadId) return; // old load ignored
+    if (loadId !== currentLoadId) return;
     if(!resp.ok) throw new Error('EPUB fetch failed: ' + resp.status);
 
     const blob = await resp.blob();
@@ -131,7 +140,7 @@ async function loadEPUB() {
     imgFiles = found;
 
     for (const f of imgFiles) {
-      if (loadId !== currentLoadId) return; // stop mid-loop if new load started
+      if (loadId !== currentLoadId) return;
       const b = await zip.file(f).async('blob');
       const u = URL.createObjectURL(b);
       const im = new Image();
