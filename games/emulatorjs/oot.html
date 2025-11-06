@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ocarina of Time EmulatorJS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            overflow: hidden;
+        }
+        #game {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div id="game"></div>
+
+    <script>
+        const romFile = "oot.z64";  // Your N64 ROM
+        const enableDebug = false;
+        const enableThreads = true;  // N64 benefits from threads
+
+        async function runGame() {
+            window.EJS_player = "#game";
+            window.EJS_gameName = "Ocarina of Time";
+            window.EJS_gameUrl = romFile;
+            window.EJS_core = "core-parallel_n64";  // uses mupen64plus_next
+            window.EJS_pathtodata = "data/cores/";    
+            window.EJS_startOnLoaded = true;
+            window.EJS_DEBUG_XX = enableDebug;
+            window.EJS_disableDatabases = true;
+            window.EJS_threads = enableThreads;
+
+            const script = document.createElement("script");
+            script.src = "data/cores/loader.js";  // EmulatorJS loader
+            document.body.appendChild(script);
+        }
+
+        runGame();
+
+        window.addEventListener("resize", () => {
+            const gameDiv = document.getElementById("game");
+            gameDiv.style.width = window.innerWidth + "px";
+            gameDiv.style.height = window.innerHeight + "px";
+        });
+    </script>
+</body>
+</html>
