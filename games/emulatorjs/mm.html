@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EmulatorJS</title>
+    <link rel="icon" href="docs/favicon.ico" sizes="16x16 32x32 48x48 64x64" type="image/vnd.microsoft.icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body, html {
+            height: 100%;
+            background-color: black;
+            color: white;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        #display { width: 100%; height: 100%; }
+    </style>
+</head>
+<body>
+    <div id="display"></div>
+
+    <script>
+        const ROM_PATH = "roms/mm.z64"; // <-- Change this to your ROM file
+        let enableDebug = false;
+        let enableThreads = false;
+
+        async function run(url) {
+            const parts = ROM_PATH.split(".");
+            const ext = parts.pop();
+
+            // Auto-detect core based on file extension
+            let core = "gba";
+            if (["smc","sfc"].includes(ext)) core = "snes";
+            if (["nes"].includes(ext)) core = "nes";
+            if (["z64","n64"].includes(ext)) core = "n64";
+            if (["gb","gbc"].includes(ext)) core = "gb";
+
+            // Remove display placeholder and prepare game div
+            const div = document.getElementById("display");
+            div.innerHTML = '<div id="game"></div>';
+
+            window.EJS_player = "#game";
+            window.EJS_gameName = parts.join(".");
+            window.EJS_biosUrl = "";
+            window.EJS_gameUrl = ROM_PATH;
+            window.EJS_core = core;
+            window.EJS_pathtodata = "data/";
+            window.EJS_startOnLoaded = true;
+            window.EJS_DEBUG_XX = enableDebug;
+            window.EJS_disableDatabases = true;
+            window.EJS_threads = enableThreads;
+
+            const script = document.createElement("script");
+            script.src = "data/loader.js";
+            document.body.appendChild(script);
+        }
+
+        run();
+    </script>
+</body>
+</html>
