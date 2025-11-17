@@ -68,15 +68,28 @@
     </div>
   </div>
 <script>
-const volumeBaseUrl = "https://raw.githubusercontent.com/biology-study/biology-files/main/jujutsukaisen/";
-const volumeNumbers = [0, ...Array.from({length: 15}, (_, i) => i + 16)];
-const volumes = volumeNumbers.map(num => `jjk${num}.epub`);
+const baseOriginal = "https://raw.githubusercontent.com/biology-study/biology-files/main/jujutsukaisen/";
+const baseAlt = "https://raw.githubusercontent.com/biology-study/spanish-practice/main/jjk/";
+
+// Build volume list 0–30
+const volumeNumbers = Array.from({length: 31}, (_, i) => i);
+
+// Generate full URLs following your rules
+const volumes = volumeNumbers.map(num => {
+  let base =
+    num === 0 || num >= 16
+      ? baseOriginal     // Volume 0 and 16–30
+      : baseAlt;         // Volume 1–15
+
+  return base + `jjk${num}.epub`;
+});
+
 const volumeSelect = document.getElementById('volumeSelect');
 
-let epubUrl = volumeBaseUrl + volumes[0];
+let epubUrl = volumes[0];
 let imgFiles = [], images = [];
 let current = 0, twoPage = false;
-let currentLoadId = 0; // ← unique ID for each load
+let currentLoadId = 0;
 
 const loadingEl = document.getElementById('loading');
 const pageA = document.getElementById('pageA');
@@ -85,7 +98,7 @@ const pagePicker = document.getElementById('pagePicker');
 const totalEl = document.getElementById('total');
 const toggleBtn = document.getElementById('toggleView');
 
-// Populate volume dropdown
+// Populate dropdown
 volumeNumbers.forEach((num, i) => {
   const opt = document.createElement("option");
   opt.value = volumes[i];
@@ -94,7 +107,7 @@ volumeNumbers.forEach((num, i) => {
 });
 
 volumeSelect.onchange = () => {
-  epubUrl = volumeBaseUrl + volumeSelect.value;
+  epubUrl = volumeSelect.value; // already a full URL
   resetReader();
 };
 
@@ -110,10 +123,10 @@ function resetReader() {
 }
 
 async function loadEPUB() {
-  const loadId = ++currentLoadId; // tag this specific load
+  const loadId = ++currentLoadId;
   try {
     const resp = await fetch(epubUrl);
-    if (loadId !== currentLoadId) return; // old load ignored
+    if (loadId !== currentLoadId) return;
     if(!resp.ok) throw new Error('EPUB fetch failed: ' + resp.status);
 
     const blob = await resp.blob();
@@ -130,7 +143,7 @@ async function loadEPUB() {
     imgFiles = found;
 
     for (const f of imgFiles) {
-      if (loadId !== currentLoadId) return; // stop mid-loop if new load started
+      if (loadId !== currentLoadId) return;
       const b = await zip.file(f).async('blob');
       const u = URL.createObjectURL(b);
       const im = new Image();
@@ -154,11 +167,13 @@ async function loadEPUB() {
 
 function render() {
   if (images.length === 0) return;
+
   if (twoPage) {
     const rightIdx = current;
     const leftIdx = current + 1;
     pageB.style.display = 'block';
     pageB.src = images[rightIdx].src;
+
     if (leftIdx < images.length) {
       pageA.style.display = 'block';
       pageA.src = images[leftIdx].src;
@@ -170,6 +185,7 @@ function render() {
     pageB.src = images[current].src;
     pageA.style.display = 'none';
   }
+
   pagePicker.value = Math.min(current + 1, images.length);
 }
 
@@ -187,14 +203,17 @@ function prevPage() {
 
 document.getElementById('rightArrow').onclick = nextPage;
 document.getElementById('leftArrow').onclick = prevPage;
+
 document.addEventListener('keydown', e => {
   if(e.key==='ArrowRight') nextPage();
   if(e.key==='ArrowLeft') prevPage();
 });
+
 pagePicker.onchange = () => {
   current = Math.max(0, Math.min(images.length - 1, pagePicker.value - 1));
   render();
 };
+
 toggleBtn.onclick = () => {
   twoPage = !twoPage;
   toggleBtn.textContent = 'Two-page: ' + (twoPage ? 'On' : 'Off');
