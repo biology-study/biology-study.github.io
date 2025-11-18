@@ -30,7 +30,8 @@
 
 <body>
 
-    <h2>Upload a ROM to Play</h2>
+    <h2 id="uploadTitle">Upload a ROM to Play</h2>
+
     <input 
         type="file" 
         id="romInput" 
@@ -44,6 +45,10 @@
             const file = event.target.files[0];
             if (!file) return;
 
+            // Hide upload UI after ROM is chosen
+            document.getElementById("romInput").style.display = "none";
+            document.getElementById("uploadTitle").style.display = "none";
+
             const ext = file.name.split(".").pop().toLowerCase();
 
             // Detect emulator core
@@ -53,23 +58,23 @@
             if (["z64", "n64"].includes(ext)) core = "n64";
             if (["gb", "gbc"].includes(ext)) core = "gb";
 
-            // Create browser-local blob URL
+            // Create local blob URL
             const romURL = URL.createObjectURL(file);
 
-            // Replace display with game container
+            // Replace display area with emulator container
             document.getElementById("display").innerHTML = `<div id="game"></div>`;
 
-            // EmulatorJS settings
+            // EmulatorJS configuration
             window.EJS_player = "#game";
             window.EJS_gameName = file.name;
             window.EJS_gameUrl = romURL;
             window.EJS_core = core;
             window.EJS_biosUrl = "";
-            window.EJS_pathtodata = "data/";  // Make sure "data" folder exists!
+            window.EJS_pathtodata = "data/";
             window.EJS_startOnLoaded = true;
             window.EJS_disableDatabases = true;
 
-            // Load the EmulatorJS loader
+            // Load EmulatorJS loader
             const script = document.createElement("script");
             script.src = "data/loader.js";
             document.body.appendChild(script);
