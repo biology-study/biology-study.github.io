@@ -35,37 +35,53 @@
 </style>
 </head>
 <body>
-  <div class="reader-wrap">
-    <div id="loading">Loading manga...</div>
-    <div id="leftArrow" class="arrow" aria-hidden="true">&#10094;</div>
-    <div id="rightArrow" class="arrow" aria-hidden="true">&#10095;</div>
+<div class="reader-wrap">
+  <div id="loading">Loading manga...</div>
+  <div id="leftArrow" class="arrow" aria-hidden="true">&#10094;</div>
+  <div id="rightArrow" class="arrow" aria-hidden="true">&#10095;</div>
 
-    <div id="pages" class="page-container">
-      <img id="pageA" class="page-img" style="display:none" alt="left page">
-      <img id="pageB" class="page-img" style="display:none" alt="right page">
-    </div>
-
-    <div class="controls">
-      <input id="pagePicker" type="number" min="1" value="1" />
-      <div id="total" style="color:var(--muted); font-size:14px"></div>
-    </div>
-
-    <button id="toggleView" class="toggle-btn">Two-page: Off</button>
-    <div class="meta">
-      Volume
-      <select id="volumeSelect"></select>
-    </div>
+  <div id="pages" class="page-container">
+    <img id="pageA" class="page-img" style="display:none" alt="left page">
+    <img id="pageB" class="page-img" style="display:none" alt="right page">
   </div>
 
-<script>
-const volumeBaseUrl = "https://raw.githubusercontent.com/biology-study/biology-files/main/csm/";
+  <div class="controls">
+    <input id="pagePicker" type="number" min="1" value="1" />
+    <div id="total" style="color:var(--muted); font-size:14px"></div>
+  </div>
 
-// Only volumes 1–19
-const volumeNumbers = Array.from({length: 19}, (_, i) => i + 1);
-const volumes = volumeNumbers.map(num => `csm${num}.epub`);
+  <button id="toggleView" class="toggle-btn">Two-page: Off</button>
+  <div class="meta">
+    Volume
+    <select id="volumeSelect"></select>
+  </div>
+</div>
+
+<script>
+const baseOld = "https://raw.githubusercontent.com/biology-study/biology-files/main/csm/";
+const baseNew = "https://raw.githubusercontent.com/biology-study/french-flashcards/main/csm/";
+
+// Volumes 1–22
+const volumeNumbers = Array.from({length: 22}, (_, i) => i + 1);
+
+// Helper: get URL for each volume
+function getVolumeUrl(num) {
+  const file = `csm${num}.epub`;
+  return num <= 19 ? baseOld + file : baseNew + file;
+}
+
 const volumeSelect = document.getElementById('volumeSelect');
 
-let epubUrl = volumeBaseUrl + volumes[0];
+// Populate dropdown
+volumeNumbers.forEach(num => {
+  const opt = document.createElement("option");
+  opt.value = num;
+  opt.textContent = num;
+  volumeSelect.appendChild(opt);
+});
+
+// Default load
+let epubUrl = getVolumeUrl(1);
 let imgFiles = [], images = [];
 let current = 0, twoPage = false;
 let currentLoadId = 0;
@@ -77,16 +93,9 @@ const pagePicker = document.getElementById('pagePicker');
 const totalEl = document.getElementById('total');
 const toggleBtn = document.getElementById('toggleView');
 
-// Populate volume dropdown
-volumeNumbers.forEach((num, i) => {
-  const opt = document.createElement("option");
-  opt.value = volumes[i];
-  opt.textContent = num;
-  volumeSelect.appendChild(opt);
-});
-
 volumeSelect.onchange = () => {
-  epubUrl = volumeBaseUrl + volumeSelect.value;
+  const num = Number(volumeSelect.value);
+  epubUrl = getVolumeUrl(num);
   resetReader();
 };
 

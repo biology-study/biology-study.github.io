@@ -111,28 +111,12 @@
     <h2>website updates</h2>
 
     <div class="update">
-      <strong>update #7.5</strong>
-      <small>November 17th, 2025</small>
-      <p>added bart bash, the entire jjk (sorry ace) and sonic advance. also added sonic mania. more stuff coming soon</p>
+      <strong>update #8</strong>
+      <small>November 20th, 2025</small>
+      <p>added csm volumes 20-22. fixing sonic mania over weekend</p>
     </div>
 
     <!-- Add new updates here -->
   </section>
-
-  <!-- Audio for Skull Kid laugh -->
-  <audio id="skullLaugh" preload="auto">
-    <source src="skullkid_laugh.mp3" type="audio/mpeg">
-    Your browser doesn’t support the audio element.
-  </audio>
-
-  <script>
-    const laugh = document.getElementById('skullLaugh');
-
-    // Play laugh **once** on first click anywhere
-    document.body.addEventListener('click', () => {
-      laugh.volume = 0.7;
-      laugh.play().catch(e => console.error('Error playing laugh:', e));
-    }, { once: true });
-  </script>
 </body>
 </html>
