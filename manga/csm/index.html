@@ -29,8 +29,6 @@
     font-size: 16px;
     cursor: pointer;
     appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
   }
 </style>
 </head>
@@ -61,10 +59,8 @@
 const baseOld = "https://raw.githubusercontent.com/biology-study/biology-files/main/csm/";
 const baseNew = "https://raw.githubusercontent.com/biology-study/french-flashcards/main/csm/";
 
-// Volumes 1–22
 const volumeNumbers = Array.from({length: 22}, (_, i) => i + 1);
 
-// Helper: get URL for each volume
 function getVolumeUrl(num) {
   const file = `csm${num}.epub`;
   return num <= 19 ? baseOld + file : baseNew + file;
@@ -72,7 +68,6 @@ function getVolumeUrl(num) {
 
 const volumeSelect = document.getElementById('volumeSelect');
 
-// Populate dropdown
 volumeNumbers.forEach(num => {
   const opt = document.createElement("option");
   opt.value = num;
@@ -80,7 +75,6 @@ volumeNumbers.forEach(num => {
   volumeSelect.appendChild(opt);
 });
 
-// Default load
 let epubUrl = getVolumeUrl(1);
 let imgFiles = [], images = [];
 let current = 0, twoPage = false;
@@ -139,12 +133,29 @@ async function loadEPUB() {
       images.push(im);
     }
 
-    if (loadId !== currentLoadId) return;
+    /* ---------------------------
+       FIX ORDER FOR VOLUME 20
+       --------------------------- */
+    if (Number(volumeSelect.value) === 20) {
+      const order = [
+        55, 75, 93, 112, 130, 150, 168, 186,
+        3, 20, 36
+      ];
+
+      const newOrder = [];
+      for (let i = 0; i < order.length; i++) {
+        const start = order[i] - 1;
+        const end = (i === order.length - 1 ? images.length : order[i + 1] - 1);
+        for (let p = start; p < end; p++) newOrder.push(images[p]);
+      }
+      images = newOrder;
+    }
 
     pagePicker.max = images.length;
     totalEl.textContent = '/ ' + images.length;
     loadingEl.style.display = 'none';
     render();
+
   } catch(e) {
     if (loadId === currentLoadId) {
       loadingEl.textContent = 'Error loading EPUB';
