@@ -1,0 +1,177 @@
+body, div, h1, h2, h3, p {
+	margin:0;
+	padding:0;
+	border-width:0;
+}
+body {
+	-epub-hyphens:auto;
+	-webkit-hyphens:auto;
+	font-family:serif;
+    font-size: 100%;
+    color:#000000;
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+}
+@page {
+	margin:3px;
+}
+div.art {
+	text-align:center;
+	text-indent:0;
+	margin:0;
+}
+div.arth {
+	text-align:center;
+	text-indent:0;
+	margin:1.25em 0 1.25em 0;
+}
+div.art1 {
+	text-align:center;
+	text-indent:0;
+	margin:0 0 0 0;
+}
+div.art2 {
+	text-align:center;
+	text-indent:0;
+	margin:2em 0 0 0;
+}
+div.art3 {
+	text-align:center;
+	text-indent:0;
+	margin:.5em 0 0 0;
+}
+div.art4 {
+	text-align:center;
+	padding-top: 15%;
+	text-indent:0;
+	margin:0 0 0 0;
+}
+div.artw {
+	text-align:center;
+	text-indent:0;
+	margin:5% 0 5% 0;
+}
+p.crt {
+	-epub-hyphens:none;
+	-webkit-hyphens:none;
+	font-weight:normal;
+	font-style:normal;
+	font-size:0.5em;
+	line-height:1;
+	text-align:center;
+	text-indent:0;
+	margin:.5em 0 0 0;
+}
+p.crt2 {
+	-epub-hyphens:none;
+	-webkit-hyphens:none;
+	font-weight:normal;
+	font-style:normal;
+	font-size:0.5em;
+	line-height:1;
+	text-align:center;
+	text-indent:0;
+	margin:.5em 0 .25em 0;
+}
+p.crt1 {
+	-epub-hyphens:none;
+	-webkit-hyphens:none;
+	font-weight:normal;
+	font-style:normal;
+	font-size:0.5em;
+	line-height:1;
+	text-align:center;
+	text-indent:0;
+	margin:0 0 0 0;
+}
+p.toc {
+	-epub-hyphens:none;
+	-webkit-hyphens:none;
+	font-family:monospace;
+	font-weight:normal;
+	font-style:normal;
+	font-size:0.95em;
+	line-height:1.25;
+	text-align:left;
+	text-indent:0;
+	margin:2em 0 0 0;
+}
+p.toc1 {
+	-epub-hyphens:none;
+	-webkit-hyphens:none;
+	font-family:monospace;
+	font-weight:normal;
+	font-style:normal;
+	font-size:0.95em;
+	padding-top: 20%;
+	line-height:1.25;
+	text-align:left;
+	text-indent:0;
+	margin:1.25em 0 0 40%;
+}
+p.p {
+	-epub-hyphens:none;
+	-webkit-hyphens:none;
+	font-weight : normal;
+	font-style : normal;
+	font-size : 0.9em;
+	line-height : 1.25;
+	text-align : left;
+	text-indent : 1em;
+	margin : 0;
+}
+p.paft {
+	-epub-hyphens:none;
+	-webkit-hyphens:none;
+	font-weight : normal;
+	font-style : normal;
+	font-size : 0.9em;
+	line-height : 1.25;
+	text-align : left;
+	text-indent : 0;
+	margin : 0;
+}
+p.pf {
+	-epub-hyphens:none;
+	-webkit-hyphens:none;
+	font-weight : normal;
+	font-style : normal;
+	font-size : 0.9em;
+	line-height : 1.25;
+	text-align : left;
+	text-indent : 0;
+	margin : 5em 0 0 0;
+}
+h2.ct {
+	-epub-hyphens:none;
+	-webkit-hyphens:none;
+	font-family:monospace;
+	font-size:.95em;
+	font-style:normal;
+	font-weight:bold;
+	line-height:1.25;
+	page-break-before:always;
+	padding-top: 40%;
+	text-align:right;
+	text-indent:0;
+	margin : 0 0 0 0;
+}
+span.bi {
+	font-weight : bold;
+	font-style : italic;
+}
+span.i {
+	font-style : italic;
+}
+span.sc1 {
+	font-size:0.75em;
+	font-variant : small-caps;
+}
+span.sc {
+	font-family:sans-serif;
+	font-variant : small-caps;
+	font-weight : bold;
+}
+span.b {
+	font-weight : bold;
+}

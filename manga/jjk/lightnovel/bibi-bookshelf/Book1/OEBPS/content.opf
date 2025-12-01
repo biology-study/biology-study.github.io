@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package version="2.0" unique-identifier="BookId" xmlns="http://www.idpf.org/2007/opf">
+  <metadata xmlns:dcterms="http://purl.org/dc/terms/" xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <dc:title>Jujutsu Kaisen: Summer of Ashes, Autumn of Dust</dc:title>
+    <dc:rights>Copyright 2019 by Gege Akutami, Ballad Kitaguni</dc:rights>
+    <dc:language>en-US</dc:language>
+    <dc:creator>Gege Akutami, Ballad Kitaguni</dc:creator>
+    <dc:publisher>VIZ Media</dc:publisher>
+    <dc:date>2022-12</dc:date>
+    <meta name="cover" content="cover-image" />
+    <dc:identifier id="BookId">9781974735921</dc:identifier>
+    <dc:date xmlns:opf="http://www.idpf.org/2007/opf" opf:event="modification">2022-12-27</dc:date>
+  </metadata>
+  <manifest>
+    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+    <item id="CoverPage" href="Text/CoverPage.xhtml" media-type="application/xhtml+xml"/>
+    <item id="css" href="Styles/idGeneratedStyles.css" media-type="text/css"/>
+    <item id="TP" href="Text/Kita_-00a_TP.xhtml" media-type="application/xhtml+xml"/>
+    <item id="COC" href="Text/Kita_-00b_COC.xhtml" media-type="application/xhtml+xml"/>
+    <item id="TOC" href="Text/Kita_-00c_TOC.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ATA" href="Text/Kita_-00d_ATA.xhtml" media-type="application/xhtml+xml"/>
+    <item id="CR" href="Text/Kita_-00e_CR.xhtml" media-type="application/xhtml+xml"/>
+    <item id="CH01" href="Text/Kita_-01.xhtml" media-type="application/xhtml+xml"/>
+    <item id="CH02" href="Text/Kita_-02.xhtml" media-type="application/xhtml+xml"/>
+    <item id="CH03" href="Text/Kita_-03.xhtml" media-type="application/xhtml+xml"/>
+    <item id="CH04" href="Text/Kita_-04.xhtml" media-type="application/xhtml+xml"/>
+    <item id="CH05" href="Text/Kita_-05.xhtml" media-type="application/xhtml+xml"/>
+    <item id="cover-image" href="Images/cover.jpg" media-type="image/jpeg"/>
+    <item id="ata.jpg" href="Images/ata.jpg" media-type="image/jpeg"/>
+    <item id="tp.jpg" href="Images/tp.jpg" media-type="image/jpeg"/>
+    <item id="ins1.jpg" href="Images/ins1.jpg" media-type="image/jpeg"/>
+    <item id="ins2.jpg" href="Images/ins2.jpg" media-type="image/jpeg"/>
+    <item id="ch01.jpg" href="Images/ch01.jpg" media-type="image/jpeg"/>
+    <item id="ch02.jpg" href="Images/ch02.jpg" media-type="image/jpeg"/>
+    <item id="ch03.jpg" href="Images/ch03.jpg" media-type="image/jpeg"/>
+    <item id="ch04.jpg" href="Images/ch04.jpg" media-type="image/jpeg"/>
+    <item id="ch05.jpg" href="Images/ch05.jpg" media-type="image/jpeg"/>
+    <item id="orn.jpg" href="Images/orn.jpg" media-type="image/jpeg"/>
+    <item id="p119.jpg" href="Images/p119.jpg" media-type="image/jpeg"/>
+    <item id="p29.jpg" href="Images/p29.jpg" media-type="image/jpeg"/>
+    <item id="p37.jpg" href="Images/p37.jpg" media-type="image/jpeg"/>
+    <item id="p83.jpg" href="Images/p83.jpg" media-type="image/jpeg"/>
+    <item id="p64.jpg" href="Images/p64.jpg" media-type="image/jpeg"/>
+    <item id="p65.jpg" href="Images/p65.jpg" media-type="image/jpeg"/>
+    <item id="p92.jpg" href="Images/p92.jpg" media-type="image/jpeg"/>
+    <item id="coc.jpg" href="Images/coc.jpg" media-type="image/jpeg"/>
+    <item id="coc2.jpg" href="Images/coc2.jpg" media-type="image/jpeg"/>
+    <item id="toc.jpg" href="Images/toc.jpg" media-type="image/jpeg"/>
+    <item id="crt.jpg" href="Images/crt.jpg" media-type="image/jpeg"/>
+    <item id="lgo2.jpg" href="Images/lgo2.jpg" media-type="image/jpeg"/>
+    <item id="lgo.jpg" href="Images/lgo.jpg" media-type="image/jpeg"/>
+    <item id="lgo1.jpg" href="Images/lgo1.jpg" media-type="image/jpeg"/>
+  </manifest>
+  <spine toc="ncx">
+    <itemref idref="CoverPage"/>
+    <itemref idref="TP"/>
+    <itemref idref="COC"/>
+    <itemref idref="TOC"/>
+    <itemref idref="ATA"/>
+    <itemref idref="CR"/>
+    <itemref idref="CH01"/>
+    <itemref idref="CH02"/>
+    <itemref idref="CH03"/>
+    <itemref idref="CH04"/>
+    <itemref idref="CH05"/>
+  </spine>
+  <guide>
+    <reference type="cover" title="CoverPage" href="Text/CoverPage.xhtml"/>
+    <reference type="toc" title="TOC" href="Text/Kita_-00c_TOC.xhtml"/>
+    <reference type="text" title="Chapter 1" href="Text/Kita_-01.xhtml"/>
+  </guide>
+</package>

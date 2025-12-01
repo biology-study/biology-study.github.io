@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN"
+ "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd"><ncx version="2005-1" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+  <head>
+    <meta content="9781974738472" name="dtb:uid"/>
+    <meta content="1" name="dtb:depth"/>
+    <meta content="0" name="dtb:totalPageCount"/>
+    <meta content="0" name="dtb:maxPageNumber"/>
+  </head>
+  <docTitle>
+    <text></text>
+  </docTitle>
+  <navMap>
+    <navPoint id="navpoint1" playOrder="1">
+      <navLabel>
+        <text>Characters</text>
+      </navLabel>
+      <content src="Text/Kita_-00b_COC.xhtml"/>
+    </navPoint>
+    <navPoint id="navpoint2" playOrder="2">
+      <navLabel>
+        <text>About the Authors</text>
+      </navLabel>
+      <content src="Text/Kita_-00c_ATA.xhtml"/>
+    </navPoint>
+    <navPoint id="navpoint3" playOrder="3">
+      <navLabel>
+        <text>Contents</text>
+      </navLabel>
+      <content src="Text/Kita_-00d_TOC.xhtml"/>
+    </navPoint>
+    <navPoint id="navpoint4" playOrder="4">
+      <navLabel>
+        <text>Copyright Page</text>
+      </navLabel>
+      <content src="Text/Kita_-00e_CR.xhtml"/>
+    </navPoint>
+    <navPoint id="navpoint5" playOrder="5">
+      <navLabel>
+        <text>Chapter 1</text>
+      </navLabel>
+      <content src="Text/Kita_-01.xhtml"/>
+    </navPoint>
+    <navPoint id="navpoint6" playOrder="6">
+      <navLabel>
+        <text>Chapter 2</text>
+      </navLabel>
+      <content src="Text/Kita_-02.xhtml"/>
+    </navPoint>
+    <navPoint id="navpoint7" playOrder="7">
+      <navLabel>
+        <text>Chapter 3</text>
+      </navLabel>
+      <content src="Text/Kita_-03.xhtml"/>
+    </navPoint>
+    <navPoint id="navpoint8" playOrder="8">
+      <navLabel>
+        <text>Chapter 4</text>
+      </navLabel>
+      <content src="Text/Kita_-04.xhtml"/>
+    </navPoint>
+    <navPoint id="navpoint9" playOrder="9">
+      <navLabel>
+        <text>Chapter 5</text>
+      </navLabel>
+      <content src="Text/Kita_-05.xhtml"/>
+    </navPoint>
+  </navMap>
+</ncx>
