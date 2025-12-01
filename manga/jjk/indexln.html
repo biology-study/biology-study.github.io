@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Light Novel Reader</title>
+<script src="https://stuk.github.io/jszip/dist/jszip.min.js"></script>
+
+<style>
+  :root { --bg:#0b0b0b; --fg:#ffffff; --muted:#aaaaaa; }
+  body { margin:0; background:var(--bg); color:var(--fg); font-family:Georgia, serif; }
+  #loading { position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+             background:var(--bg); font-size:28px; z-index:10; }
+  #textContainer { padding:24px; font-size:20px; line-height:1.7; max-width:800px; margin:auto; white-space:pre-wrap; }
+  .meta { position:fixed; top:12px; right:12px; display:flex; gap:8px; }
+  select { padding:6px 10px; border-radius:6px; border:0; background:#ffffff; cursor:pointer; }
+  #chapterSelect { max-width:200px; }
+</style>
+</head>
+<body>
+
+<div id="loading">Loading light novel...</div>
+
+<div class="meta">
+  <select id="novelSelect">
+    <option value="jjkln1.epub">Light Novel 1</option>
+    <option value="jjkln2.epub">Light Novel 2</option>
+  </select>
+
+  <select id="chapterSelect"></select>
+</div>
+
+<div id="textContainer"></div>
+
+<script>
+let epubPath = "jjkln1.epub";
+let chapters = [];
+let currentLoadId = 0;
+
+const loadingEl = document.getElementById("loading");
+const chapterSelect = document.getElementById("chapterSelect");
+const novelSelect = document.getElementById("novelSelect");
+const textContainer = document.getElementById("textContainer");
+
+// Switch novel
+novelSelect.onchange = async () => {
+  epubPath = novelSelect.value;
+  loadEPUB();
+};
+
+// Load EPUB & extract chapters
+async function loadEPUB() {
+  const loadId = ++currentLoadId;
+  loadingEl.style.display = "flex";
+  chapters = [];
+  chapterSelect.innerHTML = "";
+  textContainer.textContent = "";
+
+  try {
+    const resp = await fetch(epubPath);
+    if (!resp.ok) throw new Error("Failed to load EPUB");
+
+    const blob = await resp.blob();
+    const zip = await JSZip.loadAsync(blob);
+
+    // Collect XHTML/HTML chapter files
+    const chapterFiles = [];
+    zip.forEach((path, file) => {
+      if (/\.(xhtml|html)$/i.test(path) && !/toc/i.test(path)) {
+        chapterFiles.push(path);
+      }
+    });
+
+    // Sort for consistent chapter order
+    chapterFiles.sort();
+
+    // Load each chapter’s text
+    for (let i = 0; i < chapterFiles.length; i++) {
+      const file = chapterFiles[i];
+      const html = await zip.file(file).async("string");
+
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      
+      // Extract text content only
+      const text = doc.body.innerText.trim();
+
+      chapters.push({ title: `Chapter ${i+1}`, text });
+      
+      const opt = document.createElement("option");
+      opt.value = i;
+      opt.textContent = chapters[i].title;
+      chapterSelect.appendChild(opt);
+    }
+
+    loadingEl.style.display = "none";
+    loadChapter(0);
+
+  } catch (e) {
+    console.error(e);
+    loadingEl.textContent = "Error loading EPUB";
+  }
+}
+
+// Display chapter text
+function loadChapter(index) {
+  const chapter = chapters[index];
+  textContainer.textContent = chapter.text;
+}
+
+chapterSelect.onchange = () => {
+  loadChapter(parseInt(chapterSelect.value));
+};
+
+// Load first novel on startup
+loadEPUB();
+</script>
+
+</body>
+</html>
