@@ -1,100 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>Light Novel Reader</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
-
-<style>
-  body {
-    margin: 0;
-    background: #0b0b0b;
-    color: white;
-    font-family: Georgia, serif;
-  }
-  #viewer {
-    width: 100vw;
-    height: 100vh;
-  }
-  .topbar {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    z-index: 20;
-    display: flex;
-    gap: 10px;
-  }
-  select {
-    padding: 6px 10px;
-    border-radius: 6px;
-    border: 0;
-    background: white;
-    font-size: 16px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scrollable EPUB Viewer</title>
+  <script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
+  <style>
+    body { margin: 0; font-family: sans-serif; background-color: #0b0b0b; color: white; }
+    #viewer {
+      width: 100%;
+      height: 100vh;
+      overflow-y: scroll;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    img { max-width: 100%; height: auto; }
+    select { background-color: #1a1a1a; color: white; border: none; padding: 6px 10px; border-radius: 6px; margin: 10px; }
+  </style>
 </head>
 <body>
-
-<div class="topbar">
-  <select id="novelSelect">
-    <option value="jjkln1.epub">Light Novel 1</option>
-    <option value="jjkln2.epub">Light Novel 2</option>
+  <select id="bookSelect">
+    <option value="jjkln1.epub">Jujutsu Kaisen: Summer of Ashes, Autumn of Dust</option>
+    <option value="jjkln2.epub">Jujutsu Kaisen: Thorny Road At Dawn</option>
   </select>
+  <div id="viewer"></div>
 
-  <select id="chapterSelect"></select>
-</div>
+  <script>
+    const viewer = document.getElementById('viewer');
 
-<div id="viewer"></div>
+    async function loadBook(path) {
+      viewer.innerHTML = '';
+      const response = await fetch(path);
+      const arrayBuffer = await response.arrayBuffer();
+      const book = ePub(arrayBuffer);
 
-<script>
-let book, rendition;
-const viewer = document.getElementById("viewer");
-const chapterSelect = document.getElementById("chapterSelect");
+      const rendition = book.renderTo(viewer, {
+        width: '100%',
+        height: 'auto',
+        flow: 'scrolled-doc',
+        spread: 'none'
+      });
 
-// Load an EPUB using EPUB.js
-function loadBook(path) {
-  if (rendition) {
-    rendition.destroy();
-  }
+      await rendition.display();
+    }
 
-  book = ePub(path);
-  rendition = book.renderTo("viewer", {
-    width: "100%",
-    height: "100%",
-    spread: "none",
-    flow: "scrolled",
-  });
-
-  rendition.display();
-
-  // When the book is ready, load chapters
-  book.loaded.nav.then(nav => {
-    chapterSelect.innerHTML = "";
-    nav.toc.forEach((chapter, i) => {
-      const opt = document.createElement("option");
-      opt.value = chapter.href;
-      opt.textContent = chapter.label || `Chapter ${i + 1}`;
-      chapterSelect.appendChild(opt);
-    });
-  });
-}
-
-// Jump to chapter
-chapterSelect.onchange = () => {
-  const href = chapterSelect.value;
-  rendition.display(href);
-};
-
-// Switching LN
-document.getElementById("novelSelect").onchange = e => {
-  loadBook(e.target.value);
-};
-
-// Load first LN on startup
-loadBook("jjkln1.epub");
-</script>
-
+    document.getElementById('bookSelect').onchange = (e) => loadBook(e.target.value);
+  </script>
 </body>
 </html>
