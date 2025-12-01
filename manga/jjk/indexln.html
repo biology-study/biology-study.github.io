@@ -1,27 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8">
 <title>Light Novel Reader</title>
-<script src="https://stuk.github.io/jszip/dist/jszip.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
 
 <style>
-  :root { --bg:#0b0b0b; --fg:#ffffff; --muted:#aaaaaa; }
-  body { margin:0; background:var(--bg); color:var(--fg); font-family:Georgia, serif; }
-  #loading { position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
-             background:var(--bg); font-size:28px; z-index:10; }
-  #textContainer { padding:24px; font-size:20px; line-height:1.7; max-width:800px; margin:auto; white-space:pre-wrap; }
-  .meta { position:fixed; top:12px; right:12px; display:flex; gap:8px; }
-  select { padding:6px 10px; border-radius:6px; border:0; background:#ffffff; cursor:pointer; }
-  #chapterSelect { max-width:200px; }
+  body {
+    margin: 0;
+    background: #0b0b0b;
+    color: white;
+    font-family: Georgia, serif;
+  }
+  #viewer {
+    width: 100vw;
+    height: 100vh;
+  }
+  .topbar {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 20;
+    display: flex;
+    gap: 10px;
+  }
+  select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 0;
+    background: white;
+    font-size: 16px;
+  }
 </style>
 </head>
 <body>
 
-<div id="loading">Loading light novel...</div>
-
-<div class="meta">
+<div class="topbar">
   <select id="novelSelect">
     <option value="jjkln1.epub">Light Novel 1</option>
     <option value="jjkln2.epub">Light Novel 2</option>
@@ -30,90 +46,54 @@
   <select id="chapterSelect"></select>
 </div>
 
-<div id="textContainer"></div>
+<div id="viewer"></div>
 
 <script>
-let epubPath = "jjkln1.epub";
-let chapters = [];
-let currentLoadId = 0;
-
-const loadingEl = document.getElementById("loading");
+let book, rendition;
+const viewer = document.getElementById("viewer");
 const chapterSelect = document.getElementById("chapterSelect");
-const novelSelect = document.getElementById("novelSelect");
-const textContainer = document.getElementById("textContainer");
 
-// Switch novel
-novelSelect.onchange = async () => {
-  epubPath = novelSelect.value;
-  loadEPUB();
-};
-
-// Load EPUB & extract chapters
-async function loadEPUB() {
-  const loadId = ++currentLoadId;
-  loadingEl.style.display = "flex";
-  chapters = [];
-  chapterSelect.innerHTML = "";
-  textContainer.textContent = "";
-
-  try {
-    const resp = await fetch(epubPath);
-    if (!resp.ok) throw new Error("Failed to load EPUB");
-
-    const blob = await resp.blob();
-    const zip = await JSZip.loadAsync(blob);
-
-    // Collect XHTML/HTML chapter files
-    const chapterFiles = [];
-    zip.forEach((path, file) => {
-      if (/\.(xhtml|html)$/i.test(path) && !/toc/i.test(path)) {
-        chapterFiles.push(path);
-      }
-    });
-
-    // Sort for consistent chapter order
-    chapterFiles.sort();
-
-    // Load each chapter’s text
-    for (let i = 0; i < chapterFiles.length; i++) {
-      const file = chapterFiles[i];
-      const html = await zip.file(file).async("string");
-
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-      
-      // Extract text content only
-      const text = doc.body.innerText.trim();
-
-      chapters.push({ title: `Chapter ${i+1}`, text });
-      
-      const opt = document.createElement("option");
-      opt.value = i;
-      opt.textContent = chapters[i].title;
-      chapterSelect.appendChild(opt);
-    }
-
-    loadingEl.style.display = "none";
-    loadChapter(0);
-
-  } catch (e) {
-    console.error(e);
-    loadingEl.textContent = "Error loading EPUB";
+// Load an EPUB using EPUB.js
+function loadBook(path) {
+  if (rendition) {
+    rendition.destroy();
   }
+
+  book = ePub(path);
+  rendition = book.renderTo("viewer", {
+    width: "100%",
+    height: "100%",
+    spread: "none",
+    flow: "scrolled",
+  });
+
+  rendition.display();
+
+  // When the book is ready, load chapters
+  book.loaded.nav.then(nav => {
+    chapterSelect.innerHTML = "";
+    nav.toc.forEach((chapter, i) => {
+      const opt = document.createElement("option");
+      opt.value = chapter.href;
+      opt.textContent = chapter.label || `Chapter ${i + 1}`;
+      chapterSelect.appendChild(opt);
+    });
+  });
 }
 
-// Display chapter text
-function loadChapter(index) {
-  const chapter = chapters[index];
-  textContainer.textContent = chapter.text;
-}
-
+// Jump to chapter
 chapterSelect.onchange = () => {
-  loadChapter(parseInt(chapterSelect.value));
+  const href = chapterSelect.value;
+  rendition.display(href);
 };
 
-// Load first novel on startup
-loadEPUB();
+// Switching LN
+document.getElementById("novelSelect").onchange = e => {
+  loadBook(e.target.value);
+};
+
+// Load first LN on startup
+loadBook("jjkln1.epub");
 </script>
 
 </body>
